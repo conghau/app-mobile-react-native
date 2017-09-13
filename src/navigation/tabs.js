@@ -21,6 +21,7 @@ import Error from '@components/general/Error';
 import StyleGuide from '@containers/StyleGuideView';
 import Recipes from '@containers/recipes/Browse/BrowseContainer';
 import RecipeView from '@containers/recipes/RecipeView';
+import VozHomePage from '@containers/voz/Home/VozHomePage';
 
 const navbarPropsTabs = {
   ...AppConfig.navbarProps,
@@ -81,6 +82,15 @@ const scenes = (
       component={StyleGuide}
       icon={props => TabIcon({ ...props, icon: 'speaker-notes' })}
       analyticsDesc={'StyleGuide: Style Guide'}
+    />
+
+    <Scene
+      key={'vozHomePage'}
+      {...navbarPropsTabs}
+      title={'voz'}
+      component={VozHomePage}
+      icon={props => TabIcon({ ...props, icon: 'rocket', type: 'font-awesome' })}
+      analyticsDesc={'VOZ: voz'}
     />
   </Scene>
 );

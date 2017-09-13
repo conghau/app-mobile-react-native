@@ -41,6 +41,7 @@ if (__DEV__) {
 // Init redux store (using the given reducer & middleware)
 const store = compose(
   applyMiddleware(...middleware),
+  window.devToolsExtension ? window.devToolsExtension() : f => f
 )(createStore)(rootReducer);
 
 /* Component ==================================================================== */
