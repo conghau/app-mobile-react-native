@@ -5,10 +5,10 @@
  * https://github.com/mcnamee/react-native-starter-app
  */
 import React from 'react';
-import { Actions, Scene, ActionConst } from 'react-native-router-flux';
+import {Actions, Scene, ActionConst} from 'react-native-router-flux';
 
 // Consts and Libs
-import { AppConfig } from '@constants/';
+import {AppConfig} from '@constants/';
 
 // Components
 import Drawer from '@containers/ui/DrawerContainer';
@@ -18,36 +18,58 @@ import AppLaunch from '@containers/Launch/LaunchContainer';
 import Placeholder from '@components/general/Placeholder';
 import AuthScenes from './auth';
 import TabsScenes from './tabs';
+import VozThreadPage from '../containers/voz/VozThreadPage';
+import VozPostPage from '../containers/voz/VozPostPage';
 
 /* Routes ==================================================================== */
 export default Actions.create(
-  <Scene key={'root'} {...AppConfig.navbarProps}>
-    <Scene
-      hideNavBar
-      key={'splash'}
-      component={AppLaunch}
-      analyticsDesc={'AppLaunch: Launching App'}
-    />
+    <Scene key={'root'} {...AppConfig.navbarProps}>
+        <Scene
+            hideNavBar
+            key={'splash'}
+            component={AppLaunch}
+            analyticsDesc={'AppLaunch: Launching App'}
+        />
 
-    {/* Auth */}
-    {AuthScenes}
+        {/* Auth */}
+        {AuthScenes}
 
-    {/* Main App */}
-    <Scene key={'app'} {...AppConfig.navbarProps} title={AppConfig.appName} hideNavBar={false} type={ActionConst.RESET}>
-      {/* Drawer Side Menu */}
-      <Scene key={'home'} component={Drawer} initial={'tabBar'}>
-        {/* Tabbar */}
-        {TabsScenes}
-      </Scene>
+        {/* Main App */}
+        <Scene key={'app'} {...AppConfig.navbarProps} title={AppConfig.appName} hideNavBar={false}
+               type={ActionConst.RESET}>
+            {/* Drawer Side Menu */}
+            <Scene key={'home'} component={Drawer} initial={'tabBar'}>
+                {/* Tabbar */}
+                {TabsScenes}
+            </Scene>
 
-      {/* General */}
-      <Scene
-        clone
-        key={'comingSoon'}
-        title={'Coming Soon1'}
-        component={Placeholder}
-        analyticsDesc={'Placeholder: Coming Soon'}
-      />
-    </Scene>
-  </Scene>,
+            {/* General */}
+            <Scene
+                clone
+                key={'comingSoon'}
+                title={'Coming Soon1'}
+                component={Placeholder}
+                analyticsDesc={'Placeholder: Coming Soon'}
+            />
+
+            {/*voz thread list*/}
+            <Scene
+                clone
+                key={'vozThreadList'}
+                title={'Voz Thread LIst'}
+                component={VozThreadPage}
+                analyticsDesc={'Placeholder: Coming Soon'}
+            />
+
+            {/*voz post */}
+            <Scene
+                clone
+                key={'vozPost'}
+                title={'Voz Post List'}
+                component={VozPostPage}
+                analyticsDesc={'Placeholder: Coming Soon'}
+            />
+
+        </Scene>
+    </Scene>,
 );

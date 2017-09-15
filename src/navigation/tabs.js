@@ -21,7 +21,7 @@ import Error from '@components/general/Error';
 import StyleGuide from '@containers/StyleGuideView';
 import Recipes from '@containers/recipes/Browse/BrowseContainer';
 import RecipeView from '@containers/recipes/RecipeView';
-import VozHomePage from '@containers/voz/Home/VozHomePage';
+import VozHomePage from '../containers/voz/VozHomePage';
 
 const navbarPropsTabs = {
   ...AppConfig.navbarProps,
