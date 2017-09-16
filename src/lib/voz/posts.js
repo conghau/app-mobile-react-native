@@ -27,11 +27,11 @@ function parsePost($post, threadId) {
         const $userNcontent = $post.find('> tr');
         const $user = $userNcontent.eq(1).find('table tr > td');
 
-        post.user.img = $user.eq(0).find('a > img').attr('src');
+        post.user.avt = $user.eq(0).find('a > img').attr('src');
 
         let _next = 1;
-        if (isUndefined(post.user.img)) {
-            post.user.img = null;
+        if (isUndefined(post.user.avt)) {
+            post.user.avt = null;
             _next = 0;
         }
 
@@ -41,7 +41,7 @@ function parsePost($post, threadId) {
         const [, userId] = $userName.attr('href').match(/u=(\d+)/);
         post.user.id = userId;
         post.user.name = $userName.text().trim();
-        post.user.title = $userInfo.eq(1).text().trim();
+        post.user.role = $userInfo.eq(1).text().trim();
 
         const $userMeta = $user.eq(_next + 2).find('> div > div');
         const jd = $userMeta.eq(0).text().trim().split(':')[1].trim().split('-');
@@ -58,9 +58,10 @@ function parsePost($post, threadId) {
         if (quoteTables && quoteTables.length > 0) {
             quoteTables.each((idx, table) => {
                 const quote = cheerio(table).find('tr td');
-                const wrap = cheerio('<div class="voz-bbcode-quote" style="background: #ddd; padding: 5px; margin-bottom: 5px;"></div>');
+                const wrap = cheerio('<div class="voz-bbcode-quote"></div>');
                 const $table = cheerio(table);
-                $table.parent().css({margin: '5px'});
+                // $table.parent().css({margin: '5px'});
+                // $table.parent().css({margin: '5px'});
                 $table.replaceWith(wrap.append(quote.contents()));
             });
         }
@@ -74,16 +75,18 @@ function parsePost($post, threadId) {
             });
         }
         // save for images
-        const iamges = $content.find('img');
-
-        if (iamges && iamges.length > 0) {
-            iamges.each((idx, im) => {
-                cheerio(im).css({'max-width': '100%'});
-            });
-        }
+        // const iamges = $content.find('img');
+        //
+        // if (iamges && iamges.length > 0) {
+        //     iamges.each((idx, im) => {
+        //         cheerio(im).css({'max-width': '100%'});
+        //     });
+        // }
 
         post.content.text = $content.text().trim();
+        // post.content.html = $content.html();
         post.content.html = $content.html();
+
 
         // need to correct all image src
         post.content.html = post.content.html.replace(/src="\/?image/g, `src="${FORUM_URL}/image`);

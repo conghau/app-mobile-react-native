@@ -3,11 +3,15 @@
  */
 import React, {Component} from "react";
 import PropTypes from "prop-types";
-import {ListView, ScrollView, StyleSheet, View} from "react-native";
+import {ListView, ScrollView, StyleSheet, View, WebView} from "react-native";
+import HTML from 'react-native-render-html'
+
+
 // Consts and Libs
 import {AppColors, AppStyles} from "@theme/";
 // Components
-import {Alerts, Button, Card, FormInput, FormLabel, List, ListItem, Spacer, Text} from "@components/ui/";
+import {Alerts, Button, Card, FormInput, FormLabel, List, ListItem, Spacer, Text} from "../../components/ui/";
+import PostHeaderUserInfo from "./PostHeaderUserInfo";
 
 /* Styles ==================================================================== */
 const styles = StyleSheet.create({
@@ -36,24 +40,33 @@ class PostsList extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.setState({
             dataSource: ds.cloneWithRows(nextProps.data),
         })
     }
 
-    renderRow = (data, sectionID) => (
-        <ListItem
-            key={`list-row-${sectionID}`}
-            // onPress={Actions.comingSoon}
-            title={data.title}
-            subtitle={data.role || null}
-            leftIcon={data.icon ? {name: data.icon} : null}
-            avatar={data.avatar ? {uri: data.avatar} : null}
-            roundAvatar={!!data.avatar}
-        />
-    );
+    renderRow(data, sectionID) {
+        const {title, content, user} = data;
+        const htmlContent = `<p><a href="http://jsdf.co">&hearts; nice job!</a></p>`;
+
+        return (
+            <Card>
+
+                {/*<HTMLView*/}
+                {/*value={htmlContent}*/}
+                {/*/>*/}
+                <PostHeaderUserInfo user={user}/>
+                <WebView style={styles.tabContainer}
+                         source={{html: htmlContent}}
+                         startInLoadingState={false}/>
+                <HTML html={content.text} htmlStyles={{margin: 15}}/>
+
+            </Card>
+
+        )
+
+    }
 
     render() {
         return (

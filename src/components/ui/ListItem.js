@@ -28,13 +28,13 @@ class CustomListItem extends Component {
       PropTypes.array,
       PropTypes.shape({}),
     ]),
-  }
+  };
 
   static defaultProps = {
     containerStyle: [],
     titleStyle: [],
     subtitleStyle: [],
-  }
+  };
 
   listItemProps = () => {
     // Defaults
