@@ -7,6 +7,7 @@ import {ListView, ScrollView, StyleSheet, View, RefreshControl} from "react-nati
 import {Actions} from "react-native-router-flux";
 import {AppColors, AppStyles} from "../../theme/";
 import {List, ListItem} from "../../components/ui/";
+import WelcomeText from "react-native/local-cli/templates/HelloNavigation/views/welcome/WelcomeText.ios";
 
 const styles = StyleSheet.create({
     // Tab Styles
@@ -31,17 +32,17 @@ class ThreadList extends Component {
 
         [
             'renderRow',
-            'onRefresh'
+            '_onRefresh'
         ].forEach((method) => this[method] = this[method].bind(this));
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.setState({
-            dataSource: ds.cloneWithRows(nextProps.data),
-            // isRefreshing: false,
-        })
+            // dataSource: ds.cloneWithRows(nextProps.data),
+            dataSource: this.state.dataSource.cloneWithRows(nextProps.data),
+            isRefreshing: false,
+        });
+
     }
 
     renderRow = (data, sectionID) => (
@@ -56,39 +57,42 @@ class ThreadList extends Component {
         />
     );
 
-    onRefresh() {
+    async _onRefresh() {
         console.log('onRefresh');
 
         if (this.props.reFetch) {
             this.setState({isRefreshing: true});
-            this.props.reFetch(this.props.forumId, 1)
-                .then(() => {
-                    this.setState({isRefreshing: false});
-                });
+            console.log('before refresh');
+            await this.props.reFetch(this.props.forumId, 1);
+            console.log('end refresh');
+            this.setState({isRefreshing: false});
         }
     }
 
     render() {
+        const {isRefreshing, dataSource} = this.state;
         return (
             <View style={styles.tabContainer}>
                 <ScrollView
                     automaticallyAdjustContentInsets={false}
                     style={[AppStyles.container]}
+                    refreshControl={
+                        this.props.reFetch ?
+                            <RefreshControl
+                                refreshing={isRefreshing}
+                                onRefresh={this._onRefresh}
+                                tintColor={AppColors.brand.primary}
+                            />
+                            : null
+                    }
                 >
                     <List>
                         <ListView
+                            initialListSize={5}
                             renderRow={this.renderRow}
-                            dataSource={this.state.dataSource}
+                            dataSource={dataSource}
                             enableEmptySections={true}
-                            refreshControl={
-                                this.props.reFetch ?
-                                    <RefreshControl
-                                        refreshing={this.state.isRefreshing}
-                                        onRefresh={this.onRefresh}
-                                        tintColor={AppColors.brand.primary}
-                                    />
-                                    : null
-                            }
+                            automaticallyAdjustContentInsets={false}
                         />
                     </List>
                 </ScrollView>

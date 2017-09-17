@@ -18,7 +18,7 @@ import { SocialIcon } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 
 // Consts and Libs
-import { AppColors, AppStyles } from '@theme/';
+import { AppColors, AppStyles } from '../theme/';
 
 // Components
 import {

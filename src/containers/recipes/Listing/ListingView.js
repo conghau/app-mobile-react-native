@@ -58,6 +58,7 @@ class RecipeListing extends Component {
     * Refetch Data (Pull to Refresh)
     */
   reFetch = () => {
+    console.log('reFetchreFetchreFetchreFetch')
     if (this.props.reFetch) {
       this.setState({ isRefreshing: true });
 

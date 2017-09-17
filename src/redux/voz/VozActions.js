@@ -41,6 +41,7 @@ export function getPostList(threadId, pageNumber = 1) {
     return function (dispatch) {
         vozPost.getPostList(threadId, pageNumber).then(data => {
             dispatch({type: type.VOZ_FETCH_POST_SUCCESS, payload: data});
+            console.log('getPostList');
             return data;
         }).catch(error => {
             dispatch({
