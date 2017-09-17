@@ -3,7 +3,7 @@
  */
 import React, {Component} from "react";
 import PropTypes from "prop-types";
-import {ListView, ScrollView, StyleSheet, View} from "react-native";
+import {ListView, ScrollView, StyleSheet, View, RefreshControl} from "react-native";
 import {Actions} from "react-native-router-flux";
 import {AppColors, AppStyles} from "../../theme/";
 import {List, ListItem} from "../../components/ui/";
@@ -26,10 +26,12 @@ class ThreadList extends Component {
 
         this.state = {
             dataSource: ds.cloneWithRows(this.props.data),
+            isRefreshing: true,
         };
 
         [
             'renderRow',
+            'onRefresh'
         ].forEach((method) => this[method] = this[method].bind(this));
     }
 
@@ -38,6 +40,7 @@ class ThreadList extends Component {
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.setState({
             dataSource: ds.cloneWithRows(nextProps.data),
+            // isRefreshing: false,
         })
     }
 
@@ -53,6 +56,18 @@ class ThreadList extends Component {
         />
     );
 
+    onRefresh() {
+        console.log('onRefresh');
+
+        if (this.props.reFetch) {
+            this.setState({isRefreshing: true});
+            this.props.reFetch(this.props.forumId, 1)
+                .then(() => {
+                    this.setState({isRefreshing: false});
+                });
+        }
+    }
+
     render() {
         return (
             <View style={styles.tabContainer}>
@@ -65,6 +80,15 @@ class ThreadList extends Component {
                             renderRow={this.renderRow}
                             dataSource={this.state.dataSource}
                             enableEmptySections={true}
+                            refreshControl={
+                                this.props.reFetch ?
+                                    <RefreshControl
+                                        refreshing={this.state.isRefreshing}
+                                        onRefresh={this.onRefresh}
+                                        tintColor={AppColors.brand.primary}
+                                    />
+                                    : null
+                            }
                         />
                     </List>
                 </ScrollView>
@@ -74,7 +98,10 @@ class ThreadList extends Component {
 }
 
 ThreadList.propTypes = {
-    data: PropTypes.array
+    data: PropTypes.array,
+    reFetch: PropTypes.func,
+    // isRefreshing: PropTypes.bool,
+    // onRefresh: PropTypes.func,
 };
 
 export default ThreadList;

@@ -49,7 +49,7 @@ class VozHomePage extends Component {
         if (this.state.loading) return <Loading />;
         const {forums} = this.props;
         return (
-            <ForumList data={forums}></ForumList>
+            <ForumList data={forums}/>
         )
     }
 }

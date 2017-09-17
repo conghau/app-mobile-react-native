@@ -24,12 +24,15 @@ class CustomCard extends Component {
       PropTypes.array,
       PropTypes.shape({}),
     ]),
-  }
+  };
 
   static defaultProps = {
-    containerStyle: [],
+    containerStyle: [
+        { padding: 8 },
+        { margin: 5 },
+    ],
     titleStyle: [],
-  }
+  };
 
   cardProps = () => {
     // Defaults
@@ -45,7 +48,7 @@ class CustomCard extends Component {
       }],
       titleStyle: [
         AppStyles.h2,
-        { marginBottom: 15 },
+        { marginBottom: 10 },
       ],
     };
 

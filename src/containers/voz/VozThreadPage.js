@@ -39,11 +39,18 @@ class VozThreadPage extends Component {
         };
         console.log(this);
         // this.props.actions.getThreadList(33, 1);
+        const {forumId, pageNumber} = this.props;
+        this.props.actions.getThreadList(forumId, pageNumber);
+        [
+            'handleRefresh',
+        ].forEach((method) => this[method] = this[method].bind(this));
+    }
+
+    handleRefresh(forumId, pageNumber = 1) {
+        return this.props.actions.getThreadList(forumId, pageNumber || 1);
     }
 
     componentWillMount() {
-        const {forumId, pageNumber} = this.props;
-        this.props.actions.getThreadList(forumId, pageNumber);
         this.setState({
             loading: false,
         });
@@ -51,9 +58,9 @@ class VozThreadPage extends Component {
 
     render = () => {
         if (this.state.loading) return <Loading />;
-        const {threads} = this.props;
+        const {threads, forumId} = this.props;
         return (
-            <ThreadList data={threads.items || []}></ThreadList>
+            <ThreadList data={threads.items || []} reFetch={this.handleRefresh} forumId={forumId}/>
         )
     }
 }

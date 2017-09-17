@@ -8,7 +8,7 @@ import HTML from 'react-native-render-html'
 
 
 // Consts and Libs
-import {AppColors, AppStyles} from "@theme/";
+import {AppColors, AppStyles} from "../../theme/";
 // Components
 import {Alerts, Button, Card, FormInput, FormLabel, List, ListItem, Spacer, Text} from "../../components/ui/";
 import PostHeaderUserInfo from "./PostHeaderUserInfo";
@@ -56,7 +56,9 @@ class PostsList extends Component {
                 {/*<HTMLView*/}
                 {/*value={htmlContent}*/}
                 {/*/>*/}
-                <PostHeaderUserInfo user={user}/>
+                <View style={{marginLeft: 0}}>
+                    <PostHeaderUserInfo user={user}/>
+                </View>
                 <WebView style={styles.tabContainer}
                          source={{html: htmlContent}}
                          startInLoadingState={false}/>
@@ -78,7 +80,7 @@ class PostsList extends Component {
                     <List>
                         <ListView
                             renderRow={this.renderRow}
-                            dataSource={this.state.dataSource}
+                            dataSource={this.state.dataSource || []}
                             enableEmptySections={true}
                         />
                     </List>

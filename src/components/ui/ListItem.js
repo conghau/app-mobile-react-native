@@ -1,73 +1,81 @@
 /**
  * List Items
  *
-     <ListItem title={'Hello World'} />
+ <ListItem title={'Hello World'} />
  *
  * React Native Starter App
  * https://github.com/mcnamee/react-native-starter-app
  */
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { ListItem } from 'react-native-elements';
+import {ListItem} from 'react-native-elements';
 
 // Consts and Libs
-import { AppColors, AppStyles } from '@theme/';
+import {AppColors, AppStyles} from '@theme/';
 
 /* Component ==================================================================== */
 class CustomListItem extends Component {
-  static propTypes = {
-    containerStyle: PropTypes.oneOfType([
-      PropTypes.array,
-      PropTypes.shape({}),
-    ]),
-    titleStyle: PropTypes.oneOfType([
-      PropTypes.array,
-      PropTypes.shape({}),
-    ]),
-    subtitleStyle: PropTypes.oneOfType([
-      PropTypes.array,
-      PropTypes.shape({}),
-    ]),
-  };
-
-  static defaultProps = {
-    containerStyle: [],
-    titleStyle: [],
-    subtitleStyle: [],
-  };
-
-  listItemProps = () => {
-    // Defaults
-    const props = {
-      title: 'Coming Soon...',
-      chevronColor: AppColors.textSecondary,
-      underlayColor: AppColors.border,
-      ...this.props,
-      containerStyle: [{
-        backgroundColor: AppColors.listItemBackground,
-        borderTopColor: AppColors.border,
-        borderBottomColor: AppColors.border,
-      }],
-      titleStyle: [AppStyles.baseText],
-      subtitleStyle: [AppStyles.subtext],
+    static propTypes = {
+        containerStyle: PropTypes.oneOfType([
+            PropTypes.array,
+            PropTypes.shape({}),
+        ]),
+        titleStyle: PropTypes.oneOfType([
+            PropTypes.array,
+            PropTypes.shape({}),
+        ]),
+        subtitleStyle: PropTypes.oneOfType([
+            PropTypes.array,
+            PropTypes.shape({}),
+        ]),
+        avatarContainerStyle: PropTypes.oneOfType([
+            PropTypes.array,
+            PropTypes.shape({}),
+        ]),
     };
 
-    if (this.props.containerStyle) {
-      props.containerStyle.push(this.props.containerStyle);
-    }
+    static defaultProps = {
+        containerStyle: [],
+        titleStyle: [],
+        subtitleStyle: [],
+        avatarContainerStyle: [],
+    };
 
-    if (this.props.titleStyle) {
-      props.titleStyle.push(this.props.titleStyle);
-    }
+    listItemProps = () => {
+        // Defaults
+        const props = {
+            title: 'Coming Soon...',
+            chevronColor: AppColors.textSecondary,
+            underlayColor: AppColors.border,
+            ...this.props,
+            containerStyle: [{
+                backgroundColor: AppColors.listItemBackground,
+                borderTopColor: AppColors.border,
+                borderBottomColor: AppColors.border,
+            }],
+            titleStyle: [AppStyles.baseText],
+            subtitleStyle: [AppStyles.subtext],
+        };
 
-    if (this.props.subtitleStyle) {
-      props.subtitleStyle.push(this.props.subtitleStyle);
-    }
+        if (this.props.containerStyle) {
+            props.containerStyle.push(this.props.containerStyle);
+        }
 
-    return props;
-  }
+        if (this.props.titleStyle) {
+            props.titleStyle.push(this.props.titleStyle);
+        }
 
-  render = () => <ListItem {...this.listItemProps()} />;
+        if (this.props.subtitleStyle) {
+            props.subtitleStyle.push(this.props.subtitleStyle);
+        }
+        // if (this.props.avatarContainerStyle) {
+        //     props.avatarContainerStyle.push(this.props.avatarContainerStyle);
+        // }
+
+        return props;
+    };
+
+    render = () => <ListItem {...this.listItemProps()} />;
 }
 
 /* Export Component ==================================================================== */

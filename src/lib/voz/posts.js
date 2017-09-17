@@ -45,7 +45,9 @@ function parsePost($post, threadId) {
 
         const $userMeta = $user.eq(_next + 2).find('> div > div');
         const jd = $userMeta.eq(0).text().trim().split(':')[1].trim().split('-');
-        post.user.joinDate = new Date(jd[1], jd[0], 1, 0, 0, 0);
+        // post.user.joinDate = new Date(jd[1], jd[0], 1, 0, 0, 0);
+        // post.user.jd = jd;
+        post.user.joinDate = `${jd[0]}-${jd[1]}`;
         post.user.posts = parseInt($userMeta.eq(1).text().split(':')[1].trim().replace(/,/g, ''));
 
         // end process user info
