@@ -32,8 +32,11 @@ export function parseThreadList(response) {
 
 export function parsePageNum(response) {
     const pageTexts = cheerio('.pagenav td.vbmenu_control', response);
+    console.log(pageTexts);
     if (pageTexts) {
         const text = pageTexts.eq(0).text();
+        console.log(text);
+
         const match = text.match(/(\d+)\sof\s(\d+)/);
         if (match) return parseInt(match[2], 10);
     }
@@ -43,6 +46,7 @@ export function parsePageNum(response) {
 export async function getThreadList(id, pageNum = 0) {
     try {
         const url = pageNum > 1 ? `${FORUM_URL}/forumdisplay.php?f=${id}&page=${pageNum}` : `${FORUM_URL}/forumdisplay.php?f=${id}`;
+        console.log(url);
         const response = await GET(url);
         return {items: parseThreadList(response), total: parsePageNum(response)};
     } catch (error) {

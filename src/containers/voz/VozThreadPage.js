@@ -53,22 +53,30 @@ class VozThreadPage extends Component {
         this.state = {
             dataSource: ds.cloneWithRows([]),
             isRefreshing: true,
+            currentPage: 1,
         };
 
         [
             '_onRefresh',
             'onViewableItemsChanged',
             'renderRow',
+            '_onGoTo'
         ].forEach((method) => this[method] = this[method].bind(this));
     }
 
     _onRefresh() {
         const {forumId, pageNumber} = this.props;
-        this.setState({isRefreshing: true});
+        this.setState({isRefreshing: true, currentPage: pageNumber});
         console.log('before refresh');
         this.props.actions.getThreadList(forumId, pageNumber || 1);
         // console.log('end refresh');
         // this.setState({isRefreshing: false});
+    }
+
+    _onGoTo(pageNumber) {
+        const {forumId} = this.props;
+        this.setState({isRefreshing: true, currentPage: pageNumber});
+        this.props.actions.getThreadList(forumId, pageNumber || 1);
     }
 
     componentWillMount() {
@@ -106,7 +114,8 @@ class VozThreadPage extends Component {
 
     render = () => {
         if (this.state.loading) return <Loading />;
-        const {isRefreshing, dataSource} = this.state;
+        const {isRefreshing, dataSource, currentPage} = this.state;
+        const {threads} = this.props;
         return (
             <View style={styles.tabContainer}>
                 <ScrollView
@@ -130,7 +139,14 @@ class VozThreadPage extends Component {
                         />
                     </List>
                 </ScrollView>
-                <Pagination maxPage={5} currentPage={1}/>
+                <Pagination
+                    maxPage={threads.total}
+                    currentPage={currentPage}
+                    onNextPageClick={() => this._onGoTo(currentPage + 1)}
+                    onPrevPageClick={() => this._onGoTo(currentPage - 1)}
+                    onFirstPageClick={() => this._onGoTo(1)}
+                    onLastPageClick={() => this._onGoTo(threads.total)}
+                />
                 <Pagination maxPage={10} currentPage={1}/>
             </View>
         )
