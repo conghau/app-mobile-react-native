@@ -15,7 +15,10 @@ import PostHeaderUserInfo from "../../components/voz/PostHeaderUserInfo";
 import HTML from "react-native-render-html";
 // import DisplayHTML from 'react-native-display-html';
 // import HTMLText from 'react-native-htmltext';
+import HTMLView from 'react-native-htmlview';
+
 import {colors, normalize, ViewPropTypes, SearchBar} from "react-native-elements";
+import AppWebView from "../../components/general/WebView";
 
 
 /* Styles ==================================================================== */
@@ -29,6 +32,12 @@ const styles = StyleSheet.create({
         color: colors.grey1,
     },
     titleStyle: {...AppStyles.baseText},
+});
+
+const stylesHtml = StyleSheet.create({
+   imgStyle: {
+
+   }
 });
 
 class VozPostPage extends Component {
@@ -49,7 +58,9 @@ class VozPostPage extends Component {
             loading: true,
             currentPage: 1,
         };
-        [].forEach((method) => this[method] = this[method].bind(this));
+        [
+            '_onGoTo'
+        ].forEach((method) => this[method] = this[method].bind(this));
     }
 
     componentWillMount() {
@@ -66,6 +77,12 @@ class VozPostPage extends Component {
             loading: false,
         });
 
+    }
+
+    _onGoTo(pageNumber) {
+        const {threadId} = this.props;
+        this.setState({isRefreshing: true, loading: true, currentPage: pageNumber});
+        this.props.actions.getPostList(threadId, pageNumber || 1);
     }
 
     renderHeader = () => {
@@ -125,7 +142,9 @@ class VozPostPage extends Component {
                                         {/*style={{marginTop: 20, flex: 1}}*/}
                                     {/*/>*/}
                                     {/*<HTMLText html={item.content.html}/>*/}
-
+                                    <HTMLView value={item.content.html} stylesheet={stylesHtml} attribs={{width: 300}}
+                                              // renderNode={}
+                                    />
                                 </Card>
                             )}
                             ListHeaderComponent={
