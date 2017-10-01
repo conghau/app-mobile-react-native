@@ -127,6 +127,7 @@ export function parsePageNum(response) {
     const pageTexts = cheerio('.pagenav td.vbmenu_control', response);
     if (pageTexts) {
         const text = pageTexts.eq(0).text();
+        console.log(text);
         const match = text.match(/(\d+)\sof\s(\d+)/);
         if (match) return parseInt(match[2], 10);
     }
@@ -153,15 +154,20 @@ export function parseSecurityToken(response) {
     return null;
 }
 
+export function parseTitle(response) {
+
+}
+
 export async function getPostList(tid, pageNum = 0) {
     try {
         const url = pageNum > 0 ? `${THREAD_URL}${tid}&page=${pageNum}` : `${THREAD_URL}${tid}`;
         const response = await GET(url);
         return {
             'items': parsePosts(tid, response),
-            'pageNumber': parsePageNum(response),
+            'total': parsePageNum(response),
             'loggedUser': parseUser(response),
-            'securityToken': parseSecurityToken(response)
+            'securityToken': parseSecurityToken(response),
+            'title': parseTitle(response)
         };
     } catch (error) {
         console.log({
@@ -170,7 +176,7 @@ export async function getPostList(tid, pageNum = 0) {
         });
         return {
             'items': [],
-            'pageNumber': 0
+            'total': 0
         };
     }
 }

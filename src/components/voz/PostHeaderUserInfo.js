@@ -3,12 +3,11 @@
  */
 import React, {Component} from "react";
 import PropTypes from "prop-types";
-import {ListItem} from "../../components/ui/";
 import {Platform, StyleSheet, TouchableHighlight, View} from "react-native";
 import {Avatar, colors, normalize, Text, ViewPropTypes} from "react-native-elements";
 import fonts from "react-native-elements/src/config/fonts";
 import {AppColors, AppStyles} from "../../theme/";
-
+import moment from "moment";
 
 const FORUM_URL = 'https://vozforums.com';
 
@@ -25,6 +24,14 @@ const styles = StyleSheet.create({
         borderBottomColor: colors.greyOutline,
         borderBottomWidth: 1,
         backgroundColor: 'transparent',
+    },
+    containerPost: {
+        flexDirection: 'row',
+        borderBottomColor: colors.greyOutline,
+        borderBottomWidth: 1,
+        backgroundColor: 'transparent',
+        marginBottom: 5,
+
     },
     wrapper: {
         flexDirection: 'row',
@@ -87,6 +94,7 @@ class PostHeaderUserInfo extends Component {
     renderLine(props) {
         const {
             user,
+            post,
             onPress,
             leftIcon,
             onLongPress,
@@ -94,7 +102,6 @@ class PostHeaderUserInfo extends Component {
         } = props;
 
         const {
-
             avatarStyle,
             avatarContainerStyle,
             avatarOverlayContainerStyle,
@@ -115,7 +122,8 @@ class PostHeaderUserInfo extends Component {
         let avatar = user.avt ? {uri: `${FORUM_URL}/${user.avt}`} : null;
         let title = user.name;
         let subtitle = user.role;
-        let {joinDate, posts} = user;
+        let {joinDate, userPostCount} = user;
+        let {datetime, num} = post;
         let roundAvatar = true;
         let Component = onPress || onLongPress ? TouchableHighlight : View;
 
@@ -127,6 +135,27 @@ class PostHeaderUserInfo extends Component {
                 style={[styles.container, containerStyle]}
                 {...attributes}
             >
+                {post &&
+                <View style={[styles.containerPost]}>
+                    {post.datetime !== null &&
+                    <View style={titleContainerStyle}>
+
+                        <Text>
+                            {moment(datetime, 'YYYY-MM-DD\THH:mm:ss').format('DD-MM-YYYY, HH:mm')}
+                        </Text>
+
+                    </View>
+                    }
+                    {post.num !== null &&
+                    <View style={[styles.rightTitleContainer, rightTitleContainerStyle]}>
+                        <Text style={[styles.rightTitleStyle, rightTitleStyle]}>
+                            #{post.num}
+                        </Text>
+                    </View>
+
+                    }
+                </View>
+                }
                 <View style={[styles.wrapper, wrapperStyle && wrapperStyle]}>
                     {avatar &&
                     <View style={styles.avatar}>
@@ -187,7 +216,7 @@ class PostHeaderUserInfo extends Component {
                             JD: {joinDate.toString()}
                         </Text>
                         <Text style={[styles.rightTitleStyle, rightTitleStyle]}>
-                            posts : {posts || 0}
+                            Posts : {userPostCount || 0}
                         </Text>
                     </View>
                     }
@@ -210,11 +239,15 @@ PostHeaderUserInfo.propTypes = {
         id: PropTypes.string,
         name: PropTypes.string,
         joinDate: PropTypes.date,
-        posts: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        userPostCount: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         avt: PropTypes.string,
         role: PropTypes.string,
         img: PropTypes.string,
-        title: PropTypes.string
+        title: PropTypes.string,
+    }),
+    post: PropTypes.shape({
+        datetime: PropTypes.date,
+        num: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
     })
 };
 

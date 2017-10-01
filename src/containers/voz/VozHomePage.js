@@ -1,13 +1,14 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux';
+import React, {Component} from "react";
+import {connect} from "react-redux";
+import PropTypes from "prop-types";
 import {bindActionCreators} from "redux";
-import PropTypes from 'prop-types';
-import {View, StyleSheet} from 'react-native';
-import * as VozActions from '../../redux/voz/VozActions';
-// Consts and Libs
-import {AppStyles, AppSizes, AppColors} from '@theme/';
-import ForumList from '../../components/voz/ForumList';
-import Loading from '@components/general/Loading';
+import {FlatList, ScrollView, StyleSheet, View} from "react-native";
+import * as VozActions from "../../redux/voz/VozActions";
+import {AppStyles} from "../../theme/";
+import Loading from "../../components/general/Loading";
+import {List, ListItem} from "../../components/ui/";
+import {Actions} from "react-native-router-flux";
+import {SearchBar} from  'react-native-elements';
 
 /* Styles ==================================================================== */
 const styles = StyleSheet.create({
@@ -32,24 +33,84 @@ class VozHomePage extends Component {
         super(props);
         this.state = {
             loading: true,
+            searchKey: '',
+            forums: [],
+
         };
-        console.log(this);
-        this.props.actions.getForumList();
+
+        [
+            'handleFilter',
+        ].forEach((method) => this[method] = this[method].bind(this));
     }
 
     componentWillMount() {
         // this.props.actions.getForumList().then(res => {
+        this.props.actions.getForumList();
         this.setState({
-            loading: false,
+            loading: true,
         });
         // });
     }
 
+    componentWillReceiveProps(nextProps) {
+        console.log('nextProps');
+        console.log(nextProps);
+        this.setState({
+            isRefreshing: false,
+            loading: false,
+            forums: nextProps.forums || []
+        });
+
+    }
+
+    handleFilter(val) {
+        console.log(val);
+        if (this.props.forums) {
+            let filter = this.props.forums.filter((forum) => {
+                return (`${forum.id}`.includes(val));
+            });
+            this.setState({
+                forums: filter,
+            })
+        }
+    }
+
+    renderHeader = () => {
+        return <SearchBar placeholder="Type Here..." lightTheme round onChangeText={this.handleFilter}/>;
+    };
+
     render = () => {
         if (this.state.loading) return <Loading />;
-        const {forums} = this.props;
+        const {forums} = this.state;
         return (
-            <ForumList data={forums}/>
+            <View style={styles.tabContainer}>
+                <ScrollView
+                    automaticallyAdjustContentInsets={false}
+                    style={[AppStyles.container]}
+                >
+                    <List>
+                        <FlatList
+                            keyExtractor={item => item.id}
+                            data={forums}
+                            renderItem={({item}) => (
+                                <ListItem
+                                    key={`list-row-${item.id}`}
+                                    // onPress={Actions.comingSoon}
+                                    onPress={() => {
+                                        Actions.vozThreadList({forumId: item.id || 0})
+                                    }}
+                                    title={`${item.title} - ${item.id} `}
+                                    // subtitle={item.role || null}
+                                    // leftIcon={item.icon ? {name: item.icon} : null}
+                                    // avatar={item.avatar ? {uri: item.avatar} : null}
+                                    // roundAvatar={!!item.avatar}
+                                />
+                            )}
+                            ListHeaderComponent={this.renderHeader}
+                        />
+                    </List>
+                </ScrollView>
+            </View>
         )
     }
 }
